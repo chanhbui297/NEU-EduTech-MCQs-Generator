@@ -1,0 +1,683 @@
+app:
+  description: An intelligent assistant designed to streamline the assessment creation
+    process for educators and students. By analyzing uploaded course materials (PDFs,
+    PPTs, Lecture Notes), the system automatically generates high-quality quizzes
+    and exams tailored to specific user requirements.
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: TeachMate
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.4@5faf411e694e0da130a337347a625a3812b1b7502a0183382d66d92c841bf05a
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: llm
+        targetType: answer
+      id: llm-answer
+      source: llm
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1768148176291-source-1768667722912-target
+      source: '1768148176291'
+      sourceHandle: source
+      target: '1768667722912'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: if-else
+      id: 1768667722912-source-1768668505405-target
+      source: '1768667722912'
+      sourceHandle: source
+      target: '1768668505405'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1768668505405-true-llm-target
+      source: '1768668505405'
+      sourceHandle: 'true'
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: if-else
+      id: 1768668505405-false-1768668711518-target
+      source: '1768668505405'
+      sourceHandle: 'false'
+      target: '1768668711518'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: if-else
+      id: 1768668711518-false-1768668758712-target
+      source: '1768668711518'
+      sourceHandle: 'false'
+      target: '1768668758712'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1768668758712-true-17686688529110-target
+      source: '1768668758712'
+      sourceHandle: 'true'
+      target: '17686688529110'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1768668758712-false-17686688518030-target
+      source: '1768668758712'
+      sourceHandle: 'false'
+      target: '17686688518030'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 17686688502530-source-17686700462850-target
+      source: '17686688502530'
+      sourceHandle: source
+      target: '17686700462850'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 17686688529110-source-17686700474170-target
+      source: '17686688529110'
+      sourceHandle: source
+      target: '17686700474170'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 17686688518030-source-17686700481850-target
+      source: '17686688518030'
+      sourceHandle: source
+      target: '17686700481850'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1768668711518-true-17686688502530-target
+      source: '1768668711518'
+      sourceHandle: 'true'
+      target: '17686688502530'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: User Input
+        type: start
+        variables:
+        - hint: ''
+          label: Choose the platform
+          max_length: 48
+          options:
+          - Kahoot
+          - Quizlet
+          - Wayground
+          - NEU LMS
+          placeholder: ''
+          required: true
+          type: select
+          variable: platform
+        - default: ''
+          hint: ''
+          label: Content
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: true
+          type: paragraph
+          variable: topic
+      height: 133
+      id: '1768148176291'
+      position:
+        x: -224.5424696389154
+        y: -51.267189461274995
+      positionAbsolute:
+        x: -224.5424696389154
+        y: -51.267189461274995
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
+          role: system
+          text: "# VAI TRÒ\nBạn là Game Master của Kahoot, chuyên tạo không khí sôi\
+            \ động và vui vẻ.\n\n# NHIỆM VỤ\nDựa vào kiến thức được cung cấp: {{#context#}}\n\
+            Hãy tạo 10 câu hỏi trắc nghiệm về chủ đề: {{{#1768148176291.topic#}}\n\
+            \n# LUẬT KAHOOT (BẮT BUỘC TUÂN THỦ)\n1. Câu hỏi: Tối đa 120 ký tự.\n2.\
+            \ Đáp án: Tối đa 75 ký tự.\n3. Phải chỉ rõ đáp án đúng.\n4. Thời gian\
+            \ suy nghĩ mặc định: 20s.\n\n# ĐỊNH DẠNG ĐẦU RA (JSON ONLY)\nBạn chỉ được\
+            \ trả về 1 chuỗi JSON duy nhất, không có văn bản thừa. Cấu trúc như sau:\n\
+            {\n  \"platform\": \"Kahoot\",\n  \"items\": [\n    {\n      \"question\"\
+            : \"4P trong Marketing gồm những gì?\",\n      \"option_1\": \"Product,\
+            \ Price, Place, Promotion\",\n      \"option_2\": \"People, Process, Physical,\
+            \ Plan\",\n      \"option_3\": \"Product, Price, People, Place\",\n  \
+            \    \"option_4\": \"Promotion, Plan, Place, Price\",\n      \"correct_option\"\
+            : 1,\n      \"time_limit\": 20\n    }\n  ]\n}"
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 1000
+        selected: false
+        structured_output_enabled: true
+        title: LLM Kahoot
+        type: llm
+        vision:
+          enabled: false
+      height: 116
+      id: llm
+      position:
+        x: 1144.6782522300884
+        y: 157.89103158016934
+      positionAbsolute:
+        x: 1144.6782522300884
+        y: 157.89103158016934
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#llm.text#}}'
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 101
+      id: answer
+      position:
+        x: 1690.5418916158014
+        y: 157.89103158016934
+      positionAbsolute:
+        x: 1690.5418916158014
+        y: 157.89103158016934
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        dataset_ids:
+        - 2nPOUBNF0Q0W0CXiUlfgs4+sV+lXLKbeVwmHzlPeSo0oUYtBZ93r0Eyux3HIIoYY
+        - 1Kb1Z5Sqi7Gj32Vz/KVR/PwCCNCgSsYjK7OdfbNzLVEtOjuCrMzzch0x8j17hq/n
+        - 0AL0slipyOJEMYhB7d7MVc4QIZELMsWW1Fo2m0qT8Ty+b/F3ZyO4ZA3y56mCv/7e
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          score_threshold: 0.3
+          top_k: 10
+          weights:
+            keyword_setting:
+              keyword_weight: 0
+            vector_setting:
+              embedding_model_name: text-embedding-004
+              embedding_provider_name: langgenius/gemini/google
+              vector_weight: 1
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1768148176291'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: Knowledge Retrieval
+        type: knowledge-retrieval
+      height: 50
+      id: '1768667722912'
+      position:
+        x: 50.01400194328693
+        y: 249.62170078655703
+      positionAbsolute:
+        x: 50.01400194328693
+        y: 249.62170078655703
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: dd1ac86f-5c49-4bae-9644-f9cdd0ebafb2
+            value: Kahoot
+            varType: string
+            variable_selector:
+            - '1768148176291'
+            - platform
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: IF/ELSE
+        type: if-else
+      height: 122
+      id: '1768668505405'
+      position:
+        x: 486.2321058193829
+        y: 233.70512176678864
+      positionAbsolute:
+        x: 486.2321058193829
+        y: 233.70512176678864
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 741a730c-4a64-44fe-af15-625cef9c39e4
+            value: Quizlet
+            varType: string
+            variable_selector:
+            - '1768148176291'
+            - platform
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: IF/ELSE 2
+        type: if-else
+      height: 122
+      id: '1768668711518'
+      position:
+        x: 780.8978035971099
+        y: 427.5816707971443
+      positionAbsolute:
+        x: 780.8978035971099
+        y: 427.5816707971443
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: a0049948-4bc7-4e46-a405-223101a3556c
+            value: NEU LMS
+            varType: string
+            variable_selector:
+            - '1768148176291'
+            - platform
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: IF/ELSE 3
+        type: if-else
+      height: 122
+      id: '1768668758712'
+      position:
+        x: 796.9629893721719
+        y: 725.0000081101028
+      positionAbsolute:
+        x: 796.9629893721719
+        y: 725.0000081101028
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
+          role: system
+          text: "# VAI TRÒ\nBạn là Trợ lý học tập thông minh, chuyên tổng hợp kiến\
+            \ thức để ôn thi cấp tốc.\n\n# NHIỆM VỤ\nDựa vào kiến thức được cung cấp:\
+            \ {{#context#}}\nHãy trích xuất các thuật ngữ quan trọng và định nghĩa\
+            \ của chúng liên quan đến chủ đề: {{{#1768148176291.topic#}}\n\n# LUẬT\
+            \ QUIZLET\n1. Tách biệt rõ ràng giữa \"Thuật ngữ\" (Term) và \"Định nghĩa\"\
+            \ (Definition).\n2. Định nghĩa phải ngắn gọn, súc tích, dễ học thuộc lòng\
+            \ (dưới 30 từ).\n3. Không tạo câu hỏi, chỉ tạo kiến thức khẳng định.\n\
+            \n# ĐỊNH DẠNG ĐẦU RA (JSON ONLY)\nBạn chỉ được trả về 1 chuỗi JSON duy\
+            \ nhất, không có văn bản thừa. Cấu trúc như sau:\n{\n  \"platform\": \"\
+            Quizlet\",\n  \"items\": [\n    {\n      \"term\": \"SWOT\",\n      \"\
+            definition\": \"Công cụ phân tích gồm: Điểm mạnh, Điểm yếu, Cơ hội, Thách\
+            \ thức.\"\n    },\n    {\n      \"term\": \"SEO\",\n      \"definition\"\
+            : \"Tối ưu hóa công cụ tìm kiếm để tăng thứ hạng website.\"\n    }\n \
+            \ ]\n}"
+        selected: false
+        structured_output_enabled: true
+        title: LLM Quizlet
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '17686688502530'
+      position:
+        x: 1136.6153860547504
+        y: 364.44801159669674
+      positionAbsolute:
+        x: 1136.6153860547504
+        y: 364.44801159669674
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
+          role: system
+          text: "# VAI TRÒ\nBạn là Người thiết kế trò chơi (Game Designer) cho nền\
+            \ tảng Wayground.\n\n# NHIỆM VỤ\nDựa vào kiến thức: {{#context#}}\nHãy\
+            \ thiết kế các thử thách cho người chơi về chủ đề: {{{#1768148176291.topic#}}\n\
+            \n# LUẬT WAYGROUND\n1. Phân loại câu hỏi thành: \"Trắc nghiệm\" (Quiz)\
+            \ hoặc \"Đúng/Sai\" (TrueFalse).\n2. Gán điểm số (Points) dựa trên độ\
+            \ khó (Dễ=100, Khó=500).\n3. Giải thích ngắn gọn tại sao đúng/sai.\n\n\
+            # ĐỊNH DẠNG ĐẦU RA (JSON ONLY)\nBạn chỉ được trả về 1 chuỗi JSON duy nhất.\
+            \ Cấu trúc như sau:\n{\n  \"platform\": \"Wayground\",\n  \"items\": [\n\
+            \    {\n      \"type\": \"Quiz\",\n      \"difficulty\": \"Hard\",\n \
+            \     \"points\": 500,\n      \"question\": \"Đâu KHÔNG phải là bước trong\
+            \ quy trình bán hàng?\",\n      \"answers\": [\"Tìm kiếm\", \"Tiếp cận\"\
+            , \"Sản xuất\", \"Chốt đơn\"],\n      \"correct_answer\": \"Sản xuất\"\
+            ,\n      \"hint\": \"Hãy nghĩ đến chức năng của phòng Marketing vs Nhà\
+            \ máy.\"\n    }\n  ]\n}"
+        selected: false
+        title: LLM Wayground
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '17686688518030'
+      position:
+        x: 1144.6782522300884
+        y: 760.3238739124993
+      positionAbsolute:
+        x: 1144.6782522300884
+        y: 760.3238739124993
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
+          role: system
+          text: "# VAI TRÒ\nBạn là Chuyên gia Khảo thí và Đảm bảo chất lượng của trường\
+            \ Đại học (NEU). Bạn cực kỳ nghiêm túc và chính xác.\n\n# NHIỆM VỤ\nDựa\
+            \ DUY NHẤT vào nội dung văn bản được cung cấp trong phần CONTEXT dưới\
+            \ đây:\n---\n{{#context#}}\n---\nHãy soạn bộ câu hỏi thi trắc nghiệm về\
+            \ chủ đề: {{{#1768148176291.topic#}}\n\n# QUY TẮC BẮT BUỘC (TUÂN THỦ TUYỆT\
+            \ ĐỐI)\n1. CHỈ sử dụng thông tin có trong đoạn text ở trên. Nếu thông\
+            \ tin không có trong text, hãy bỏ qua, KHÔNG ĐƯỢC BỊA ĐẶT (No Hallucinations).\n\
+            2. Nếu đoạn text không đủ để tạo câu hỏi, hãy trả về danh sách rỗng và\
+            \ ghi chú lỗi.\n3. Mỗi câu hỏi phải có: Phân loại thang đo Bloom (Nhớ,\
+            \ Hiểu, Vận dụng, Phân tích).\n\n\n# ĐỊNH DẠNG ĐẦU RA JSON\nTrả về 1 chuỗi\
+            \ JSON duy nhất (không Markdown). Mẫu:\n{\n  \"platform\": \"LMS\",\n\
+            \  \"items\": [\n    {\n      \"bloom_level\": \"Hiểu\",\n      \"question_text\"\
+            : \"Theo tài liệu, khái niệm X được định nghĩa là gì?\",\n      \"options\"\
+            : [\"Định nghĩa A\", \"Định nghĩa B\", \"Định nghĩa C\", \"Định nghĩa\
+            \ D\"],\n      \"correct_index\": 0,\n      \"explanation\": \"Đáp án\
+            \ A đúng vì trong mục 2.1 tài liệu có viết...\"\n    }\n  ]\n}"
+        selected: false
+        title: LLM NEU LMS
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '17686688529110'
+      position:
+        x: 1136.6153860547504
+        y: 595.6102743943426
+      positionAbsolute:
+        x: 1136.6153860547504
+        y: 595.6102743943426
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{{#17686688502530.text#}}'
+        selected: false
+        title: Answer (1)
+        type: answer
+        variables: []
+      height: 101
+      id: '17686700462850'
+      position:
+        x: 1690.5418916158014
+        y: 308.6240975883959
+      positionAbsolute:
+        x: 1690.5418916158014
+        y: 308.6240975883959
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{{#17686688529110.text#}}'
+        selected: false
+        title: Answer (1)
+        type: answer
+        variables: []
+      height: 101
+      id: '17686700474170'
+      position:
+        x: 1690.5418916158014
+        y: 516.9404396610656
+      positionAbsolute:
+        x: 1690.5418916158014
+        y: 516.9404396610656
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{{#17686688518030.text#}}'
+        selected: false
+        title: Answer (1)
+        type: answer
+        variables: []
+      height: 101
+      id: '17686700481850'
+      position:
+        x: 1655.5749324374024
+        y: 709.5885922646523
+      positionAbsolute:
+        x: 1655.5749324374024
+        y: 709.5885922646523
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    viewport:
+      x: 67.30087678092639
+      y: -82.87974687766632
+      zoom: 0.6063031358999779
+  rag_pipeline_variables: []
