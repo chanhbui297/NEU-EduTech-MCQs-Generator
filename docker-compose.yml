@@ -1,0 +1,6 @@
+services:
+  frontend:
+    build: .
+    container_name: edutech-frontend
+    ports:
+      - "3000:80"
