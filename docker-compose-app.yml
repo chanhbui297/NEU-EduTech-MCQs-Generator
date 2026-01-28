@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  # 1. Backend (Nghị)
+  backend_api:
+    build: ./backend_api
+    restart: always
+    expose:
+      - "8000" # Chỉ mở cổng nội bộ cho Nginx thấy
+
+  # 2. Frontend (Thư)
+  frontend_web:
+    build: ./frontend_web
+    restart: always
+    expose:
+      - "3000" # Chỉ mở cổng nội bộ
+
+  # 3. Gateway (Nginx - Cổng chính)
+  gateway:
+    image: nginx:alpine
+    ports:
+      - "8080:80" # Mở cổng 8080 ra máy Cường
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend_api
+      - frontend_web
