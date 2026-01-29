@@ -22,18 +22,48 @@ workflow:
   features:
     file_upload:
       allowed_file_extensions:
+      - .pdf
+      - .PDF
+      - .docx
+      - .DOCX
+      - .doc
+      - .DOC
+      - .pptx
+      - .PPTX
+      - .ppt
+      - .PPT
+      - .txt
+      - .TXT
+      - .md
+      - .MD
+      - .rtf
+      - .RTF
+      - .jpg
       - .JPG
+      - .jpeg
       - .JPEG
+      - .png
       - .PNG
+      - .gif
       - .GIF
+      - .webp
       - .WEBP
-      - .SVG
+      - .bmp
+      - .BMP
+      - .xlsx
+      - .XLSX
+      - .xls
+      - .XLS
+      - .csv
+      - .CSV
       allowed_file_types:
+      - document
       - image
+      - custom
       allowed_file_upload_methods:
       - local_file
       - remote_url
-      enabled: false
+      enabled: true
       fileUploadConfig:
         attachment_image_file_size_limit: 2
         audio_file_size_limit: 50
@@ -51,17 +81,53 @@ workflow:
         transfer_methods:
         - local_file
         - remote_url
-      number_limits: 3
-    opening_statement: ''
+      number_limits: 10
+    opening_statement: '👋 Welcome to **TeachMate** - Your AI Assessment Creation Assistant
+
+
+      📚 **What you can upload:**
+
+      • Lecture slides (PPT/PPTX/PDF)
+
+      • Textbooks & course materials (PDF/Word/Text)
+
+      • Study notes & summaries (TXT/MD/DOC)
+
+      • Photos of handwritten notes or textbooks
+
+      • Excel/CSV files with data or tables
+
+
+      💡 **Tips for best results:**
+
+      ✓ Upload multiple files at once (up to 15 files)
+
+      ✓ Ensure files are clear and well-structured
+
+      ✓ For images, make sure text is readable
+
+      ✓ PDFs with selectable text work better than scanned images
+
+      ✓ Combine related materials (lecture + textbook + notes) for comprehensive questions
+
+
+      🎯 **Ready to create assessments?** Upload your materials and fill in the details
+      below!
+
+      '
     retriever_resource:
       enabled: true
     sensitive_word_avoidance:
       enabled: false
     speech_to_text:
       enabled: false
-    suggested_questions: []
+    suggested_questions:
+    - 📄 I have lecture slides on Macroeconomics, create 10 multiple choice questions
+    - 🎮 Create a Kahoot game with 15 questions about Marketing Mix from these materials
+    - 📝 Generate a NEU LMS exam on SWOT Analysis, medium difficulty
+    - 🎓 Make a Quizlet study set with 20 flashcards from my uploaded notes
     suggested_questions_after_answer:
-      enabled: false
+      enabled: true
     text_to_speech:
       enabled: false
       language: ''
@@ -203,588 +269,107 @@ workflow:
       zIndex: 0
     nodes:
     - data:
-        desc: ''
+        desc: Enhanced input system optimized for chat-based interaction with superior
+          file handling
         selected: false
-        title: User Input
+        title: Enhanced User Input
         type: start
         variables:
-        - hint: ''
-          label: Choose the platform
+        - hint: '• Kahoot/Wayground: Interactive games, engaging
+
+            • Quizlet: Personal study, flashcards
+
+            • NEU LMS: Formal exams, academic standard'
+          label: 🎯 Output Platform
           max_length: 48
           options:
           - Kahoot
           - Quizlet
           - Wayground
           - NEU LMS
-          placeholder: ''
+          placeholder: Select your target platform
           required: true
           type: select
           variable: platform
-        - default: ''
-          hint: ''
-          label: Content
+        - hint: '• Easy: Basic concepts, definitions
+
+            • Medium: Explanations and examples
+
+            • Hard: Case analysis and problem-solving
+
+            • Mixed: Realistic exam distribution (30% easy, 40% medium, 30% hard)'
+          label: ⚡ Difficulty Level
           max_length: 48
-          options: []
-          placeholder: ''
+          options:
+          - Easy (Remember & Understand)
+          - Medium (Understand & Apply)
+          - Hard (Analyze & Evaluate)
+          - Mixed (Balanced distribution)
+          placeholder: Select difficulty
           required: true
-          type: paragraph
-          variable: topic
+          type: select
+          variable: difficulty_level
+        - hint: 'Default: Comprehensive. Other options help focus on specific aspects
+            of your materials.'
+          label: 🎯 Content Processing Strategy
+          max_length: 48
+          options:
+          - Comprehensive (scan all materials)
+          - Key concepts only (main ideas)
+          - Examples and case studies focus
+          - Formulas and calculations focus
+          - Definitions and terminology focus
+          placeholder: How to process your files
+          required: false
+          type: select
+          variable: content_strategy
+        - hint: 'Default: Same as source material. Override if you need questions
+            in a specific language.'
+          label: 🌐 Question Language
+          max_length: 30
+          options:
+          - Vietnamese
+          - English
+          - Same as source material
+          placeholder: Select output language
+          required: false
+          type: select
+          variable: output_language
+        - hint: Explanations help students learn from mistakes. Recommended for study
+            materials.
+          label: 💡 Include Answer Explanations
+          max_length: 48
+          options:
+          - Yes - Detailed explanations
+          - Yes - Brief explanations
+          - No - Answers only
+          placeholder: Explanation preference
+          required: false
+          type: select
+          variable: include_explanations
         - allowed_file_extensions: []
           allowed_file_types:
+          - image
           - document
           allowed_file_upload_methods:
           - local_file
-          default: ''
-          hint: ''
-          label: uploaded_files
-          max_length: 5
-          options: []
-          placeholder: ''
+          - remote_url
+          hint: Upload lecture slides, textbooks, notes, or images. Supports PDF,
+            PPT, Word, images, Excel. Up to 15 files, 100MB each.
+          label: 📚 Upload Course Materials
+          max_length: 10
           required: true
           type: file-list
           variable: uploaded_files
-      height: 160
+      height: 298
       id: '1768148176291'
       position:
-        x: -222.0424696389154
-        y: -40.19321517863913
+        x: -437.7753697061748
+        y: -41.84813394856437
       positionAbsolute:
-        x: -222.0424696389154
-        y: -40.19321517863913
+        x: -437.7753697061748
+        y: -41.84813394856437
       selected: true
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1768841210667'
-          - text
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: gemini-2.5-flash
-          provider: langgenius/gemini/google
-        prompt_template:
-        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
-          role: system
-          text: "# ROLE & OBJECTIVE\nBạn là một Giảng viên Đại học uy tín (Senior\
-            \ Lecturer) và Chuyên gia đánh giá năng lực. \nNhiệm vụ của bạn là soạn\
-            \ thảo bộ câu hỏi trắc nghiệm khách quan (Multiple Choice Questions) để\
-            \ sử dụng trên nền tảng Kahoot, phục vụ mục đích ôn tập và kiểm tra kiến\
-            \ thức cuối khóa.\n\n# INPUT DATA\n1. **Nội dung tham chiếu (Context):**\
-            \ \n{{#context#}}\n\n2. **Chủ đề chính (Topic):** \n{{#1768148176291.topic#}}\n\
-            \n# STRICT ACADEMIC GUIDELINES (NGUYÊN TẮC HỌC THUẬT)\n1. **Tính Chính\
-            \ Xác (Accuracy):** Mọi câu hỏi phải được xây dựng DỰA TRÊN và CHỈ DỰA\
-            \ TRÊN thông tin có trong \"Nội dung tham chiếu\". Tuyệt đối không suy\
-            \ diễn quá đà hoặc bịa đặt thông tin (No Hallucinations).\n2. **Văn phong\
-            \ (Tone):** Sử dụng Tiếng Việt học thuật, trang trọng, ngắn gọn, súc tích.\
-            \ Tránh dùng từ lóng, teencode hay văn nói suồng sã.\n3. **Độ khó (Difficulty):**\
-            \ Đa dạng hóa các mức độ nhận thức theo tháp Bloom: Nhớ (Recall), Hiểu\
-            \ (Understand), Vận dụng (Apply).\n\n# KAHOOT TECHNICAL CONSTRAINTS (BẮT\
-            \ BUỘC)\nDo hạn chế về giao diện hiển thị của Kahoot, bạn phải tuân thủ\
-            \ nghiêm ngặt các giới hạn ký tự sau. Nếu vượt quá, câu hỏi sẽ bị lỗi\
-            \ hiển thị.\n1. **Câu hỏi:** Tối đa **120 ký tự** (bao gồm khoảng trắng).\
-            \ Hãy tóm tắt ý chính, đi thẳng vào vấn đề.\n2. **Đáp án:** Tối đa **75\
-            \ ký tự** cho mỗi lựa chọn.\n3. **Số lượng đáp án:** Luôn luôn là 4 lựa\
-            \ chọn.\n4. **Thời gian:** Chọn các mức 10, 20, 30, hoặc 60 giây tùy độ\
-            \ dài câu hỏi.\n\n# THINKING PROCESS (QUY TRÌNH TƯ DUY)\nBước 1: Đọc kỹ\
-            \ Context và xác định các từ khóa liên quan đến Topic.\nBước 2: Đặt câu\
-            \ hỏi nháp.\nBước 3: Kiểm tra độ dài câu hỏi nháp. Nếu > 120 ký tự ->\
-            \ Viết lại cho ngắn gọn hơn.\nBước 4: Soạn 4 đáp án (1 đúng, 3 sai gây\
-            \ nhiễu hợp lý). Kiểm tra độ dài < 75 ký tự.\nBước 5: Đóng gói vào JSON.\n\
-            \n# FEW-SHOT EXAMPLES (VÍ DỤ MẪU)\n\n<Example 1: Dạng định nghĩa - Mức\
-            \ độ Nhớ>\nUser Input Topic: \"Khái niệm Marketing\"\nAI Output:\n{\n\
-            \  \"platform\": \"Kahoot\",\n  \"items\": [\n    {\n      \"question\"\
-            : \"Theo Phillip Kotler, Marketing là hoạt động của con người hướng tới\
-            \ việc gì?\",\n      \"option_1\": \"Thỏa mãn nhu cầu qua trao đổi\",\n\
-            \      \"option_2\": \"Tối đa hóa lợi nhuận bán hàng\",\n      \"option_3\"\
-            : \"Quảng cáo sản phẩm rộng rãi\",\n      \"option_4\": \"Đánh bại mọi\
-            \ đối thủ cạnh tranh\",\n      \"correct_option\": 1,\n      \"time_limit\"\
-            : 20\n    }\n  ]\n}\n\n<Example 2: Dạng phủ định/Ngoại lệ - Mức độ Hiểu>\n\
-            User Input Topic: \"Môi trường vĩ mô\"\nAI Output:\n{\n  \"platform\"\
-            : \"Kahoot\",\n  \"items\": [\n    {\n      \"question\": \"Yếu tố nào\
-            \ SAU ĐÂY KHÔNG thuộc môi trường nhân khẩu học?\",\n      \"option_1\"\
-            : \"Quy mô dân số\",\n      \"option_2\": \"Cơ cấu độ tuổi\",\n      \"\
-            option_3\": \"Tỷ lệ lạm phát\",\n      \"option_4\": \"Tốc độ đô thị hóa\"\
-            ,\n      \"correct_option\": 3,\n      \"time_limit\": 20\n    }\n  ]\n\
-            }\n\n<Example 3: Dạng tình huống/Vận dụng - Mức độ Vận dụng>\nUser Input\
-            \ Topic: \"Chiến lược giá\"\nAI Output:\n{\n  \"platform\": \"Kahoot\"\
-            ,\n  \"items\": [\n    {\n      \"question\": \"Apple bán iPhone mới giá\
-            \ cao, sau đó giảm dần. Đây là chiến lược gì?\",\n      \"option_1\":\
-            \ \"Thâm nhập thị trường\",\n      \"option_2\": \"Hớt váng sữa (Skimming)\"\
-            ,\n      \"option_3\": \"Giá theo tâm lý\",\n      \"option_4\": \"Giá\
-            \ phân biệt\",\n      \"correct_option\": 2,\n      \"time_limit\": 30\n\
-            \    }\n  ]\n}\n\n# FINAL OUTPUT FORMAT\nChỉ trả về 1 chuỗi JSON duy nhất\
-            \ chứa danh sách 10 câu hỏi. Không thêm bất kỳ lời dẫn, lời chào hay định\
-            \ dạng Markdown (```json) nào.\n\nCấu trúc JSON bắt buộc:\n{\n  \"platform\"\
-            : \"Kahoot\",\n  \"items\": [\n    {\n       \"question\": \"String\"\
-            ,\n       \"option_1\": \"String\",\n       \"option_2\": \"String\",\n\
-            \       \"option_3\": \"String\",\n       \"option_4\": \"String\",\n\
-            \       \"correct_option\": Integer (1-4),\n       \"time_limit\": Integer\n\
-            \    }\n  ]\n}"
-        retry_config:
-          max_retries: 3
-          retry_enabled: true
-          retry_interval: 1000
-        selected: false
-        structured_output_enabled: false
-        title: LLM Kahoot
-        type: llm
-        vision:
-          enabled: false
-      height: 117
-      id: llm
-      position:
-        x: 1144.6782522300884
-        y: 157.89103158016934
-      positionAbsolute:
-        x: 1144.6782522300884
-        y: 157.89103158016934
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        answer: '{{#llm.text#}}'
-        selected: false
-        title: Answer
-        type: answer
-        variables: []
-      height: 101
-      id: answer
-      position:
-        x: 1690.5418916158014
-        y: 157.89103158016934
-      positionAbsolute:
-        x: 1690.5418916158014
-        y: 157.89103158016934
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        cases:
-        - case_id: 'true'
-          conditions:
-          - comparison_operator: is
-            id: dd1ac86f-5c49-4bae-9644-f9cdd0ebafb2
-            value: Kahoot
-            varType: string
-            variable_selector:
-            - '1768148176291'
-            - platform
-          id: 'true'
-          logical_operator: and
-        selected: false
-        title: IF/ELSE
-        type: if-else
-      height: 123
-      id: '1768668505405'
-      position:
-        x: 486.2321058193829
-        y: 232.27909604942448
-      positionAbsolute:
-        x: 486.2321058193829
-        y: 232.27909604942448
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        cases:
-        - case_id: 'true'
-          conditions:
-          - comparison_operator: is
-            id: 741a730c-4a64-44fe-af15-625cef9c39e4
-            value: Quizlet
-            varType: string
-            variable_selector:
-            - '1768148176291'
-            - platform
-          id: 'true'
-          logical_operator: and
-        selected: false
-        title: IF/ELSE 2
-        type: if-else
-      height: 123
-      id: '1768668711518'
-      position:
-        x: 780.8978035971099
-        y: 427.5816707971443
-      positionAbsolute:
-        x: 780.8978035971099
-        y: 427.5816707971443
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        cases:
-        - case_id: 'true'
-          conditions:
-          - comparison_operator: is
-            id: a0049948-4bc7-4e46-a405-223101a3556c
-            value: NEU LMS
-            varType: string
-            variable_selector:
-            - '1768148176291'
-            - platform
-          id: 'true'
-          logical_operator: and
-        selected: false
-        title: IF/ELSE 3
-        type: if-else
-      height: 123
-      id: '1768668758712'
-      position:
-        x: 796.9629893721719
-        y: 725.0000081101028
-      positionAbsolute:
-        x: 796.9629893721719
-        y: 725.0000081101028
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1768841210667'
-          - text
-        memory:
-          query_prompt_template: '{{#sys.query#}}
-
-
-            {{#sys.files#}}'
-          role_prefix:
-            assistant: ''
-            user: ''
-          window:
-            enabled: false
-            size: 10
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: gemini-2.5-flash
-          provider: langgenius/gemini/google
-        prompt_template:
-        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
-          role: system
-          text: "# ROLE\nYou are an Academic Content Condenser and Assessment Specialist.\n\
-            Your skill is transforming complex university-level material into fast-paced,\
-            \ high-precision \"Kahoot!\" quizzes.\nYou prioritize brevity, accuracy,\
-            \ and \"distractor quality\" (wrong answers must be educationally valuable).\n\
-            \n# INPUT\n1. Context: {{#context#}}\n2. Topic: {{#1768148176291.topic#}}\n\
-            \n# MISSION\nGenerate exactly 10 Multiple Choice Questions based strictly\
-            \ on the Context.\n\n# STRICT KAHOOT CONSTRAINTS (MUST FOLLOW)\n1. **Length\
-            \ Rule (CRITICAL)**:\n   - Question: UNDER 120 characters (spaces included).\n\
-            \   - Answers: UNDER 75 characters.\n   - *Strategy*: Remove filler words\
-            \ like \"Theo đoạn văn\", \"Hãy chọn\", \"Là gì\". Go straight to the\
-            \ point.\n2. **Language**: Vietnamese (Formal, Academic).\n3. **Accuracy**:\
-            \ No hallucinations. If the info isn't there, skip it.\n4. **Time Limit**:\
-            \ \n   - 10s or 20s for definitions/facts.\n   - 30s or 60s for analysis/scenarios.\n\
-            \n# CHAIN OF THOUGHT (HOW TO CONDENSE)\n*Do not output this thinking process,\
-            \ just apply it.*\n- Original: \"Theo nội dung văn bản đã cung cấp, khái\
-            \ niệm Lạm phát được định nghĩa như thế nào?\" (Too long, >100 chars)\n\
-            - **Compressed**: \"Theo tài liệu, Lạm phát được định nghĩa là:\" (Better)\n\
-            - **Optimal**: \"Lạm phát được định nghĩa là tình trạng nào?\" (Best,\
-            \ < 50 chars)\n\n# FEW-SHOT EXAMPLES\n\n## Example 1 (Definition)\nInput:\
-            \ \"GDP (Gross Domestic Product) là tổng sản phẩm quốc nội.\"\nOutput\
-            \ JSON Item:\n{\n  \"question\": \"GDP (Gross Domestic Product) là viết\
-            \ tắt của thuật ngữ nào?\",\n  \"option_1\": \"Tổng sản phẩm quốc dân\"\
-            ,\n  \"option_2\": \"Tổng sản phẩm quốc nội\",\n  \"option_3\": \"Tổng\
-            \ thu nhập quốc gia\",\n  \"option_4\": \"Tổng chi tiêu nội địa\",\n \
-            \ \"correct_option\": 2,\n  \"time_limit\": 20\n}\n\n## Example 2 (Negative/Exclusion)\n\
-            Input: \"4P Marketing gồm Product, Price, Place, Promotion.\"\nOutput\
-            \ JSON Item:\n{\n  \"question\": \"Yếu tố nào KHÔNG nằm trong mô hình\
-            \ 4P Marketing?\",\n  \"option_1\": \"Product (Sản phẩm)\",\n  \"option_2\"\
-            : \"People (Con người)\",\n  \"option_3\": \"Place (Phân phối)\",\n  \"\
-            option_4\": \"Price (Giá cả)\",\n  \"correct_option\": 2,\n  \"time_limit\"\
-            : 20\n}\n\n## Example 3 (Scenario/Application)\nInput: \"Khi cầu vượt\
-            \ quá cung, giá cả thị trường có xu hướng tăng lên.\"\nOutput JSON Item:\n\
-            {\n  \"question\": \"Hiện tượng nào xảy ra khi 'Cầu vượt quá Cung'?\"\
-            ,\n  \"option_1\": \"Giá thị trường giảm\",\n  \"option_2\": \"Giá thị\
-            \ trường tăng\",\n  \"option_3\": \"Giá không đổi\",\n  \"option_4\":\
-            \ \"Lượng cung giảm mạnh\",\n  \"correct_option\": 2,\n  \"time_limit\"\
-            : 30\n}\n\n# OUTPUT FORMAT\nReturn ONLY a single, valid JSON object. No\
-            \ Markdown code blocks. No intro text.\n\n{\n  \"platform\": \"Kahoot\"\
-            ,\n  \"items\": [\n     ... (Your 10 questions here)\n  ]\n}"
-        selected: false
-        structured_output_enabled: true
-        title: LLM Quizlet
-        type: llm
-        vision:
-          enabled: false
-      height: 87
-      id: '17686688502530'
-      position:
-        x: 1136.6153860547504
-        y: 363.0219858793326
-      positionAbsolute:
-        x: 1136.6153860547504
-        y: 363.0219858793326
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1768841210667'
-          - text
-        memory:
-          query_prompt_template: '{{#sys.query#}}
-
-
-            {{#sys.files#}}'
-          role_prefix:
-            assistant: ''
-            user: ''
-          window:
-            enabled: false
-            size: 10
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: gemini-2.5-flash
-          provider: langgenius/gemini/google
-        prompt_template:
-        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
-          role: system
-          text: "# ROLE & PERSONA\nYou are a Lead Game Designer for \"Wayground\"\
-            \ - an educational adventure platform. \nYour mission is to transform\
-            \ dry academic content into exciting challenges that motivate students\
-            \ to learn through gamification.\nYou balance fun engagement with educational\
-            \ value.\n\n# INPUT DATA\n1. **Context Material**: \n{{#context#}}\n\n\
-            2. **Target Topic**: \n{{#1768148176291.topic#}}\n\n# OBJECTIVE\nCreate\
-            \ a set of 10 interactive challenges based on the Context. You must classify\
-            \ them by difficulty levels to create a balanced \"Game Level\".\n\n#\
-            \ GAMIFICATION RULES\n1. **Language**: Vietnamese (Friendly, encouraging\
-            \ tone, but academically correct).\n2. **Difficulty Tiers**:\n   - **Easy\
-            \ (Iron Rank)**: Basic definitions/facts. Reward: 500 Points.\n   - **Medium\
-            \ (Gold Rank)**: Understanding/Comparison. Reward: 1000 Points.\n   -\
-            \ **Hard (Diamond Rank)**: Complex application/Analysis. Reward: 2000\
-            \ Points.\n3. **Question Types**:\n   - **Quiz**: Standard 4-option multiple\
-            \ choice.\n   - **TrueFalse**: Binary choice.\n4. **Hint System**: Every\
-            \ \"Medium\" and \"Hard\" question MUST have a helpful hint (not the answer\
-            \ itself, but a clue).\n\n# FEW-SHOT EXAMPLES (CHAIN OF THOUGHT)\n\n##\
-            \ Example 1: Easy Level (True/False)\nInput: \"Kinh tế học vi mô nghiên\
-            \ cứu hành vi của các hộ gia đình và doanh nghiệp.\"\n*Thinking*: Simple\
-            \ fact check. Low points.\n*Output Item*:\n{\n  \"type\": \"TrueFalse\"\
-            ,\n  \"difficulty\": \"Easy\",\n  \"points\": 500,\n  \"question\": \"\
-            Kinh tế học vi mô tập trung nghiên cứu nền kinh tế tổng thể như lạm phát\
-            \ và thất nghiệp. Đúng hay Sai?\",\n  \"options\": [\"True\", \"False\"\
-            ],\n  \"correct_answer\": \"False\",\n  \"hint\": \"Hãy nhớ từ khóa 'vi\
-            \ mô' nghĩa là nhỏ (hộ gia đình, doanh nghiệp).\",\n  \"explanation\"\
-            : \"Sai. Đó là đối tượng nghiên cứu của Kinh tế học Vĩ mô.\"\n}\n\n##\
-            \ Example 2: Medium Level (Quiz - Concept Check)\nInput: \"Mô hình SWOT\
-            \ gồm Strengths, Weaknesses, Opportunities, Threats.\"\n*Thinking*: Check\
-            \ understanding of internal vs external factors.\n*Output Item*:\n{\n\
-            \  \"type\": \"Quiz\",\n  \"difficulty\": \"Medium\",\n  \"points\": 1000,\n\
-            \  \"question\": \"Trong mô hình SWOT, hai yếu tố nào thuộc về môi trường\
-            \ BÊN NGOÀI doanh nghiệp?\",\n  \"options\": [\"Điểm mạnh & Điểm yếu\"\
-            , \"Cơ hội & Thách thức\", \"Điểm mạnh & Cơ hội\", \"Điểm yếu & Thách\
-            \ thức\"],\n  \"correct_answer\": \"Cơ hội & Thách thức\",\n  \"hint\"\
-            : \"Đây là những yếu tố khách quan mà doanh nghiệp không kiểm soát được.\"\
-            ,\n  \"explanation\": \"Opportunities (Cơ hội) và Threats (Thách thức)\
-            \ đến từ thị trường bên ngoài.\"\n}\n\n## Example 3: Hard Level (Quiz\
-            \ - Application)\nInput: \"Khi cung tiền tăng, lãi suất giảm, dẫn đến\
-            \ đầu tư tăng và tổng cầu tăng.\"\n*Thinking*: Cause and effect chain.\
-            \ High points.\n*Output Item*:\n{\n  \"type\": \"Quiz\",\n  \"difficulty\"\
-            : \"Hard\",\n  \"points\": 2000,\n  \"question\": \"Theo cơ chế truyền\
-            \ dẫn tiền tệ, điều gì sẽ xảy ra ngay sau khi Ngân hàng Trung ương mua\
-            \ vào giấy tờ có giá?\",\n  \"options\": [\"Lãi suất thị trường tăng\"\
-            , \"Cung tiền trong nền kinh tế giảm\", \"Lãi suất thị trường giảm\",\
-            \ \"Đầu tư tư nhân giảm\"],\n  \"correct_answer\": \"Lãi suất thị trường\
-            \ giảm\",\n  \"hint\": \"Mua giấy tờ có giá = Bơm tiền ra = Cung tiền\
-            \ tăng. Cung tiền tăng thì giá của tiền (lãi suất) thế nào?\",\n  \"explanation\"\
-            : \"Việc mua giấy tờ có giá làm tăng cung tiền, dẫn đến giảm lãi suất\
-            \ cân bằng.\"\n}\n\n# FINAL OUTPUT FORMAT (JSON ONLY)\nReturn a single\
-            \ valid JSON object.\n\n{\n  \"platform\": \"Wayground\",\n  \"items\"\
-            : [\n    ... (Your generated questions here)\n  ]\n}"
-        selected: false
-        title: LLM Wayground
-        type: llm
-        vision:
-          enabled: false
-      height: 87
-      id: '17686688518030'
-      position:
-        x: 1144.6782522300884
-        y: 757.5610777964023
-      positionAbsolute:
-        x: 1144.6782522300884
-        y: 757.5610777964023
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        context:
-          enabled: true
-          variable_selector:
-          - '1768841210667'
-          - text
-        memory:
-          query_prompt_template: '{{#sys.query#}}
-
-
-            {{#sys.files#}}'
-          role_prefix:
-            assistant: ''
-            user: ''
-          window:
-            enabled: false
-            size: 10
-        model:
-          completion_params:
-            temperature: 0.7
-          mode: chat
-          name: gemini-2.5-flash
-          provider: langgenius/gemini/google
-        prompt_template:
-        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
-          role: system
-          text: "# ROLE & PERSONA\nYou are a Senior Exam Assessment Expert and Academic\
-            \ Quality Assurance Specialist at the National Economics University (NEU).\n\
-            Your job is to create rigorous, exam-grade Multiple Choice Questions (MCQs)\
-            \ suitable for the official University Learning Management System (LMS/Moodle).\n\
-            You adhere to strict psychometric standards (Bloom's Taxonomy) and provide\
-            \ detailed pedagogical feedback.\n\n# INPUT DATA\n1. **Context Material**:\
-            \ \n{{#context#}}\n\n2. **Target Topic**: \n{{#1768148176291.topic#}}\n\
-            \n# OBJECTIVE\nGenerate 10 high-quality MCQs based ONLY on the Context\
-            \ provided. Each question must include metadata (Bloom level) and detailed\
-            \ explanations.\n\n# STRICT ACADEMIC REQUIREMENTS\n1. **Language**: Formal\
-            \ Vietnamese (Văn phong hành chính/học thuật).\n2. **Source Fidelity**:\
-            \ All facts must be verifiably present in the Context. If information\
-            \ is missing, skip it. Do not use external knowledge.\n3. **Question Structure**:\n\
-            \   - **Stem**: Clear, concise question text. Avoid negative phrasing\
-            \ (\"NOT\") unless necessary.\n   - **Options**: Exactly 4 options. Only\
-            \ 1 is correct. Distractors (wrong answers) must be plausible misconceptions,\
-            \ not obvious jokes.\n4. **Bloom's Taxonomy Distribution**:\n   - 30%\
-            \ Recall (Nhớ): Define concepts, recall facts.\n   - 40% Understand (Hiểu):\
-            \ Explain ideas, classify items.\n   - 30% Apply/Analyze (Vận dụng): Solve\
-            \ a problem or predict an outcome based on the theory.\n\n# FEW-SHOT EXAMPLES\
-            \ (CHAIN OF THOUGHT)\n\n## Example 1: Concept & Explanation (Bloom: Understand)\n\
-            Input: \"Độ co giãn của cầu theo giá (ED) đo lường phản ứng của lượng\
-            \ cầu khi giá thay đổi. Nếu |ED| > 1, cầu co giãn nhiều.\"\n*Thinking*:\
-            \ Test the understanding of ED > 1.\n*Output Item*:\n{\n  \"question_name\"\
-            : \"Q_DoCoGian_Cau\",\n  \"question_text\": \"Khi trị tuyệt đối của độ\
-            \ co giãn của cầu theo giá lớn hơn 1 (|ED| > 1), cầu được gọi là gì?\"\
-            ,\n  \"bloom_level\": \"Hiểu\",\n  \"answers\": [\n    { \"text\": \"\
-            Cầu co giãn nhiều\", \"fraction\": 100, \"feedback\": \"Chính xác. Theo\
-            \ lý thuyết, |ED| > 1 nghĩa là % thay đổi của lượng cầu lớn hơn % thay\
-            \ đổi của giá.\" },\n    { \"text\": \"Cầu co giãn ít\", \"fraction\"\
-            : 0, \"feedback\": \"Sai. Đây là trường hợp |ED| < 1.\" },\n    { \"text\"\
-            : \"Cầu co giãn đơn vị\", \"fraction\": 0, \"feedback\": \"Sai. Đây là\
-            \ trường hợp |ED| = 1.\" },\n    { \"text\": \"Cầu hoàn toàn không co\
-            \ giãn\", \"fraction\": 0, \"feedback\": \"Sai. Đây là trường hợp ED =\
-            \ 0.\" }\n  ]\n}\n\n## Example 2: Application Scenario (Bloom: Apply)\n\
-            Input: \"Để kiềm chế lạm phát cao, Ngân hàng Trung ương thường áp dụng\
-            \ chính sách tiền tệ thắt chặt (tăng lãi suất).\"\n*Thinking*: Create\
-            \ a scenario where inflation is high and ask for the solution.\n*Output\
-            \ Item*:\n{\n  \"question_name\": \"Q_ChinhSach_LamPhat\",\n  \"question_text\"\
-            : \"Trong bối cảnh nền kinh tế đang có tỷ lệ lạm phát tăng cao đột biến,\
-            \ Ngân hàng Trung ương nên áp dụng biện pháp nào sau đây?\",\n  \"bloom_level\"\
-            : \"Vận dụng\",\n  \"answers\": [\n    { \"text\": \"Tăng lãi suất cơ\
-            \ bản\", \"fraction\": 100, \"feedback\": \"Đúng. Tăng lãi suất là công\
-            \ cụ của chính sách tiền tệ thắt chặt nhằm giảm tổng cầu và kiềm chế lạm\
-            \ phát.\" },\n    { \"text\": \"Giảm tỷ lệ dự trữ bắt buộc\", \"fraction\"\
-            : 0, \"feedback\": \"Sai. Hành động này sẽ làm tăng cung tiền, gây lạm\
-            \ phát cao hơn.\" },\n    { \"text\": \"Mua trái phiếu chính phủ\", \"\
-            fraction\": 0, \"feedback\": \"Sai. Mua trái phiếu bơm tiền ra lưu thông,\
-            \ làm lạm phát trầm trọng hơn.\" },\n    { \"text\": \"Giảm thuế thu nhập\
-            \ doanh nghiệp\", \"fraction\": 0, \"feedback\": \"Sai. Đây là chính sách\
-            \ tài khóa nới lỏng, thường gây áp lực tăng giá.\" }\n  ]\n}\n\n# FINAL\
-            \ OUTPUT FORMAT (JSON ONLY)\nReturn a single valid JSON object.\n\n{\n\
-            \  \"platform\": \"NEU_LMS\",\n  \"items\": [\n    ... (Your generated\
-            \ questions here)\n  ]\n}"
-        selected: false
-        title: LLM NEU LMS
-        type: llm
-        vision:
-          enabled: false
-      height: 87
-      id: '17686688529110'
-      position:
-        x: 1136.6153860547504
-        y: 594.1842486769784
-      positionAbsolute:
-        x: 1136.6153860547504
-        y: 594.1842486769784
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        answer: '{{{#17686688502530.text#}}'
-        selected: false
-        title: Answer (1)
-        type: answer
-        variables: []
-      height: 101
-      id: '17686700462850'
-      position:
-        x: 1690.5418916158014
-        y: 308.6240975883959
-      positionAbsolute:
-        x: 1690.5418916158014
-        y: 308.6240975883959
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        answer: '{{{#17686688529110.text#}}'
-        selected: false
-        title: Answer (1)
-        type: answer
-        variables: []
-      height: 101
-      id: '17686700474170'
-      position:
-        x: 1690.5418916158014
-        y: 516.9404396610656
-      positionAbsolute:
-        x: 1690.5418916158014
-        y: 516.9404396610656
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 242
-    - data:
-        answer: '{{{#17686688518030.text#}}'
-        selected: false
-        title: Answer (1)
-        type: answer
-        variables: []
-      height: 101
-      id: '17686700481850'
-      position:
-        x: 1655.5749324374024
-        y: 709.5885922646523
-      positionAbsolute:
-        x: 1655.5749324374024
-        y: 709.5885922646523
-      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -792,12 +377,12 @@ workflow:
     - data:
         is_array_file: true
         selected: false
-        title: Doc Extractor
+        title: Smart Document Extractor
         type: document-extractor
         variable_selector:
         - '1768148176291'
         - uploaded_files
-      height: 104
+      height: 103
       id: '1768841210667'
       position:
         x: 77.4575303610846
@@ -809,9 +394,492 @@ workflow:
       sourcePosition: right
       targetPosition: left
       type: custom
-      width: 242
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: '1737615856695'
+            value: Kahoot
+            variable_selector:
+            - '1768148176291'
+            - platform
+          logical_operator: and
+        desc: Route to Kahoot generator
+        selected: false
+        title: Is Kahoot?
+        type: if-else
+      height: 151
+      id: '1768668505405'
+      position:
+        x: 406.27556532741767
+        y: -56.72440178883981
+      positionAbsolute:
+        x: 406.27556532741767
+        y: -56.72440178883981
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: '1737615856695'
+            value: Quizlet
+            variable_selector:
+            - '1768148176291'
+            - platform
+          logical_operator: and
+        desc: Route to Quizlet generator
+        selected: false
+        title: Is Quizlet?
+        type: if-else
+      height: 151
+      id: '1768668711518'
+      position:
+        x: 725.1890967223904
+        y: 200.13298738398933
+      positionAbsolute:
+        x: 725.1890967223904
+        y: 200.13298738398933
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: '1737615856695'
+            value: Wayground
+            variable_selector:
+            - '1768148176291'
+            - platform
+          logical_operator: and
+        desc: Route to Wayground or NEU LMS generator
+        selected: false
+        title: Is Wayground?
+        type: if-else
+      height: 167
+      id: '1768668758712'
+      position:
+        x: 1028.3891084086802
+        y: 436.85557035027966
+      positionAbsolute:
+        x: 1028.3891084086802
+        y: 436.85557035027966
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1768841210667'
+          - text
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: cf3aa79e-81dd-4401-a88b-da8ee75c-c27f
+          role: system
+          text: "# ROLE & PERSONA\nYou are an Expert Educational Game Designer specializing\
+            \ in Kahoot interactive quizzes.\nYour goal: Create engaging, well-balanced\
+            \ questions that work perfectly in a live game environment.\n\n# USER\
+            \ INPUT FROM CHAT\nThe user will provide their requirements through chat.\
+            \ Extract:\n- Topic/subject area\n- Number of questions (default to 10\
+            \ if not specified)\n- Difficulty level (from form: {{#1768148176291.difficulty_level#}})\n\
+            - Any special instructions from their message\n\n# KAHOOT-SPECIFIC REQUIREMENTS\n\
+            1. **Question Structure**:\n   - Keep questions SHORT and PUNCHY (max\
+            \ 120 characters for readability on mobile)\n   - 4 answer choices (Kahoot\
+            \ standard)\n   - Only 1 correct answer\n   - Make distractors believable\
+            \ but clearly wrong\n\n2. **Gamification Elements**:\n   - Point values:\
+            \ Easy=1000, Medium=1500, Hard=2000\n   - Add time pressure consideration\
+            \ (20-30 seconds per question)\n   - Questions should be answerable quickly\
+            \ but require thinking\n\n3. **Difficulty Distribution**:\n   - Easy:\
+            \ 30% - Recall facts, basic concepts\n   - Medium: 40% - Apply knowledge,\
+            \ connect ideas  \n   - Hard: 30% - Analyze situations, higher-order thinking\n\
+            \n# FORM SETTINGS\n- Difficulty level: {{#1768148176291.difficulty_level#}}\n\
+            - Content strategy: {{#1768148176291.content_strategy#}}\n- Output language:\
+            \ {{#1768148176291.output_language#}}\n- Include explanations: {{#1768148176291.include_explanations#}}\n\
+            \n# FEW-SHOT EXAMPLES\n\n## Example 1: Easy Level (Recall)\nInput: \"\
+            GDP stands for Gross Domestic Product, measuring total economic output.\"\
+            \nOutput:\n{\n  \"type\": \"Quiz\",\n  \"difficulty\": \"Easy\",\n  \"\
+            points\": 1000,\n  \"question\": \"What does GDP stand for?\",\n  \"options\"\
+            : [\"Gross Domestic Product\", \"General Development Plan\", \"Global\
+            \ Distribution Process\", \"Government Debt Payment\"],\n  \"correct_answer\"\
+            : \"Gross Domestic Product\",\n  \"hint\": \"It measures a country's total\
+            \ economic output\",\n  \"explanation\": \"GDP = Gross Domestic Product,\
+            \ the standard measure of economic activity\"\n}\n\n## Example 2: Medium\
+            \ Level (Application)\nInput: \"Supply curve slopes upward - as price\
+            \ increases, quantity supplied increases.\"\nOutput:\n{\n  \"type\": \"\
+            Quiz\",\n  \"difficulty\": \"Medium\",\n  \"points\": 1500,\n  \"question\"\
+            : \"When iPhone price rises from $800 to $1000, what happens to quantity\
+            \ supplied?\",\n  \"options\": [\"Increases\", \"Decreases\", \"Stays\
+            \ the same\", \"Becomes zero\"],\n  \"correct_answer\": \"Increases\"\
+            ,\n  \"hint\": \"Think about the law of supply\",\n  \"explanation\":\
+            \ \"Higher prices incentivize producers to supply more (upward sloping\
+            \ supply curve)\"\n}\n\n# OUTPUT FORMAT (JSON ONLY)\n{\n  \"platform\"\
+            : \"Kahoot\",\n  \"items\": [\n    {\n      \"type\": \"Quiz\",\n    \
+            \  \"difficulty\": \"Easy|Medium|Hard\",\n      \"points\": 1000|1500|2000,\n\
+            \      \"question\": \"...\",\n      \"options\": [\"...\", \"...\", \"\
+            ...\", \"...\"],\n      \"correct_answer\": \"...\",\n      \"hint\":\
+            \ \"...\",\n      \"explanation\": \"...\"\n    }\n  ]\n}\n"
+        - id: 9d162977-1055-4758-ad18-e82682fbb884
+          role: user
+          text: "# INPUT DATA\n**Context Material**: \n{{#1768841210667.text#}}\n\n\
+            **User's Request**: \n{{#sys.query#}}\n\n# TASK\nCreate Kahoot questions\
+            \ based on the user's chat request. Extract the topic, quantity, and any\
+            \ special requirements from their message.\n"
+        selected: false
+        title: LLM Kahoot
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: llm
+      position:
+        x: 807.964466452708
+        y: -124.53917510002546
+      positionAbsolute:
+        x: 807.964466452708
+        y: -124.53917510002546
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1768841210667'
+          - text
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: cf3aa79e-81dd-4401-a88b-da8ee75c0c27f
+          role: system
+          text: "# ROLE & PERSONA\nYou are a Learning Science Expert specializing\
+            \ in Quizlet flashcard creation.\nYour goal: Create study-optimized flashcards\
+            \ perfect for spaced repetition and active recall.\n\n# USER INPUT FROM\
+            \ CHAT\nThe user will provide their requirements through chat. Extract:\n\
+            - Topic/subject area\n- Number of flashcards (default to 10 if not specified)\n\
+            - Any special focus areas from their message\n\n# QUIZLET-SPECIFIC REQUIREMENTS\n\
+            1. **Flashcard Structure**:\n   - FRONT: Clear, concise question or term\
+            \ (one concept per card)\n   - BACK: Comprehensive answer with context\n\
+            \   - Avoid \"all of the above\" or multi-part questions\n\n2. **Learning\
+            \ Optimization**:\n   - Each card tests ONE atomic concept\n   - Answers\
+            \ should be memorable, not just correct\n   - Include mnemonics or memory\
+            \ aids when helpful\n   - Use active voice and concrete language\n\n3.\
+            \ **Difficulty Distribution**:\n   - Easy: 30% - Basic definitions, simple\
+            \ facts\n   - Medium: 50% - Explanations, relationships, examples\n  \
+            \ - Hard: 20% - Complex concepts, synthesis\n\n# FORM SETTINGS\n- Difficulty\
+            \ level: {{#1768148176291.difficulty_level#}}\n- Content strategy: {{#1768148176291.content_strategy#}}\n\
+            - Output language: {{#1768148176291.output_language#}}\n- Include explanations:\
+            \ {{#1768148176291.include_explanations#}}\n\n# FEW-SHOT EXAMPLES\n\n\
+            ## Example 1: Definition Card\n{\n  \"front\": \"What is opportunity cost?\"\
+            ,\n  \"back\": \"The value of the next best alternative that must be given\
+            \ up when making a choice. Example: If you spend $10 on lunch, the opportunity\
+            \ cost is whatever else you could have bought with that $10.\",\n  \"\
+            difficulty\": \"Easy\",\n  \"tags\": [\"Economics\", \"Basic Concepts\"\
+            , \"Chapter 1\"]\n}\n\n## Example 2: Application Card\n{\n  \"front\"\
+            : \"Why does the demand curve slope downward?\",\n  \"back\": \"As price\
+            \ decreases, quantity demanded increases due to: (1) Substitution effect\
+            \ - cheaper relative to alternatives, (2) Income effect - consumers feel\
+            \ richer and can buy more. Example: When coffee prices drop, people buy\
+            \ more coffee instead of tea.\",\n  \"difficulty\": \"Medium\",\n  \"\
+            tags\": [\"Microeconomics\", \"Demand\", \"Applications\"]\n}\n\n# OUTPUT\
+            \ FORMAT (JSON ONLY)\n{\n  \"platform\": \"Quizlet\",\n  \"items\": [\n\
+            \    {\n      \"front\": \"Question or term\",\n      \"back\": \"Answer\
+            \ with explanation\",\n      \"difficulty\": \"Easy|Medium|Hard\",\n \
+            \     \"tags\": [\"topic1\", \"topic2\"]\n    }\n  ]\n}\n"
+        - id: 9d162977-1055-4758-ad18-e82682fbb885
+          role: user
+          text: "# INPUT DATA\n**Context Material**: \n{{#1768841210667.text#}}\n\n\
+            **User's Request**: \n{{#sys.query#}}\n\n# TASK\nCreate Quizlet flashcards\
+            \ based on the user's chat request. Extract the topic, quantity, and any\
+            \ special requirements from their message.\n"
+        selected: false
+        title: LLM Quizlet
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '17686688502530'
+      position:
+        x: 1127.3890967223904
+        y: 154.24013193541452
+      positionAbsolute:
+        x: 1127.3890967223904
+        y: 154.24013193541452
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1768841210667'
+          - text
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: cf3aa79e-81dd-4401-a88b-da8ee75c0c27f
+          role: system
+          text: "# ROLE & PERSONA\nYou are a Gamification Expert specializing in Wayground\
+            \ interactive challenges.\nYour goal: Create engaging game-level questions\
+            \ with progressive difficulty.\n\n# USER INPUT FROM CHAT\nThe user will\
+            \ provide their requirements through chat. Extract:\n- Topic/subject area\n\
+            - Number of challenges (default to 10 if not specified)\n- Any special\
+            \ requirements from their message\n\n# WAYGROUND-SPECIFIC REQUIREMENTS\n\
+            1. **Game Level Design**:\n   - Questions arranged in ascending difficulty\
+            \ (game progression)\n   - Each question is a \"challenge\" to overcome\n\
+            \   - Point system rewards difficulty: Easy=1000, Medium=1500, Hard=2000\n\
+            \n2. **Challenge Structure**:\n   - 4 options per question\n   - Make\
+            \ it feel like a game, not just a test\n   - Include hints that don't\
+            \ give away the answer\n\n3. **Progressive Difficulty**:\n   - Start with\
+            \ warm-up questions (Easy)\n   - Build to challenging problems (Medium/Hard)\n\
+            \   - End with a \"boss battle\" question\n\n# FORM SETTINGS\n- Difficulty\
+            \ level: {{#1768148176291.difficulty_level#}}\n- Content strategy: {{#1768148176291.content_strategy#}}\n\
+            - Output language: {{#1768148176291.output_language#}}\n\n# OUTPUT FORMAT\
+            \ (JSON ONLY)\n{\n  \"platform\": \"Wayground\",\n  \"items\": [\n   \
+            \ {\n      \"type\": \"Quiz\",\n      \"difficulty\": \"Easy|Medium|Hard\"\
+            ,\n      \"points\": 1000|1500|2000,\n      \"question\": \"...\",\n \
+            \     \"options\": [\"...\", \"...\", \"...\", \"...\"],\n      \"correct_answer\"\
+            : \"...\",\n      \"hint\": \"...\",\n      \"explanation\": \"...\"\n\
+            \    }\n  ]\n}\n"
+        - id: 9d162977-1055-4758-ad18-e82682fbb886
+          role: user
+          text: "# INPUT DATA\n**Context Material**: \n{{#1768841210667.text#}}\n\n\
+            **User's Request**: \n{{#sys.query#}}\n\n# TASK\nCreate Wayground challenges\
+            \ based on the user's chat request. Extract the topic, quantity, and any\
+            \ special requirements from their message.\n"
+        selected: false
+        title: LLM Wayground
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '17686688518030'
+      position:
+        x: 1444.6782522300884
+        y: 757.5610777964023
+      positionAbsolute:
+        x: 1444.6782522300884
+        y: 757.5610777964023
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1768841210667'
+          - text
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.5-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 8ff44d34-a8e2-4315-80d4-b200dbc0fd64
+          role: system
+          text: "# ROLE & PERSONA\nYou are a Senior Exam Assessment Expert at National\
+            \ Economics University (NEU).\nYour goal: Create rigorous, exam-grade\
+            \ questions for formal LMS/Moodle assessments.\n\n# USER INPUT FROM CHAT\n\
+            The user will provide their requirements through chat. Extract:\n- Topic/subject\
+            \ area\n- Number of questions (default to 10 if not specified)\n- Bloom's\
+            \ taxonomy preferences (if mentioned)\n- Any special requirements from\
+            \ their message\n\n# NEU LMS ACADEMIC REQUIREMENTS\n1. **Professional\
+            \ Standards**:\n   - Formal academic language\n   - Strict adherence to\
+            \ source material (no external knowledge)\n   - Bloom's Taxonomy alignment\n\
+            \n2. **Question Structure**:\n   - Clear, unambiguous question stems\n\
+            \   - Exactly 4 options\n   - Plausible distractors (common misconceptions)\n\
+            \   - Detailed feedback for each answer\n\n3. **Difficulty Distribution**:\n\
+            \   - 30% Recall (Remember): Definitions, facts\n   - 40% Understand:\
+            \ Explanations, classifications\n   - 30% Apply/Analyze: Problem-solving,\
+            \ case analysis\n\n# FORM SETTINGS\n- Difficulty level: {{#1768148176291.difficulty_level#}}\n\
+            - Content strategy: {{#1768148176291.content_strategy#}}\n- Output language:\
+            \ {{#1768148176291.output_language#}}\n- Include explanations: {{#1768148176291.include_explanations#}}\n\
+            \n# OUTPUT FORMAT (JSON ONLY)\n{\n  \"platform\": \"NEU_LMS\",\n  \"items\"\
+            : [\n    {\n      \"question_name\": \"Unique identifier\",\n      \"\
+            question_text\": \"...\",\n      \"bloom_level\": \"Remember|Understand|Apply|Analyze|Evaluate\"\
+            ,\n      \"answers\": [\n        {\"text\": \"...\", \"fraction\": 100,\
+            \ \"feedback\": \"...\"},\n        {\"text\": \"...\", \"fraction\": 0,\
+            \ \"feedback\": \"...\"},\n        {\"text\": \"...\", \"fraction\": 0,\
+            \ \"feedback\": \"...\"},\n        {\"text\": \"...\", \"fraction\": 0,\
+            \ \"feedback\": \"...\"}\n      ]\n    }\n  ]\n}\n"
+        - id: c9aa0cd0-090e-4715-b3d9-7df343047a4e
+          role: user
+          text: "# INPUT DATA\n**Context Material**: \n{{#1768841210667.text#}}\n\n\
+            **User's Request**: \n{{#sys.query#}}\n\n# TASK\nGenerate academic-standard\
+            \ MCQs for NEU LMS based on the user's chat request. Extract the topic,\
+            \ quantity, and any special requirements from their message.\n"
+        selected: false
+        title: LLM NEU LMS
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '17686688529110'
+      position:
+        x: 1434.7750107535005
+        y: 594.1842486769784
+      positionAbsolute:
+        x: 1434.7750107535005
+        y: 594.1842486769784
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#llm.text#}}'
+        selected: false
+        title: Answer Kahoot
+        type: answer
+        variables: []
+      height: 101
+      id: answer
+      position:
+        x: 1310.5418916158014
+        y: -138.6240975883959
+      positionAbsolute:
+        x: 1310.5418916158014
+        y: -138.6240975883959
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#17686688502530.text#}}'
+        selected: false
+        title: Answer Quizlet
+        type: answer
+        variables: []
+      height: 101
+      id: '17686700462850'
+      position:
+        x: 1690.5418916158014
+        y: 148.6240975883959
+      positionAbsolute:
+        x: 1690.5418916158014
+        y: 148.6240975883959
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#17686688529110.text#}}'
+        selected: false
+        title: Answer NEU LMS
+        type: answer
+        variables: []
+      height: 101
+      id: '17686700474170'
+      position:
+        x: 1990.5418916158014
+        y: 588.9404396610656
+      positionAbsolute:
+        x: 1990.5418916158014
+        y: 588.9404396610656
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#17686688518030.text#}}'
+        selected: false
+        title: Answer Wayground
+        type: answer
+        variables: []
+      height: 101
+      id: '17686700481850'
+      position:
+        x: 1955.5749324374024
+        y: 751.5885922646523
+      positionAbsolute:
+        x: 1955.5749324374024
+        y: 751.5885922646523
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
     viewport:
-      x: -953.772332177994
-      y: 90.7065319982017
-      zoom: 0.9460576467255956
+      x: 421.1975773769402
+      y: 140.5947997698869
+      zoom: 0.4245866492545019
   rag_pipeline_variables: []
