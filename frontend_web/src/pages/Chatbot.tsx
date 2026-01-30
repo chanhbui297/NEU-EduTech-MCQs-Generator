@@ -184,6 +184,68 @@ export default function Chatbot() {
     setDataToEdit(prev => [...prev, newQ]);
   };
 
+  // --- [MỚI] HÀM XỬ LÝ UPLOAD FILE ---
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    toast({
+      title: "Đang tải lên...",
+      description: `Đang xử lý file ${file.name}. Vui lòng chờ.`,
+    });
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file); // Key quan trọng
+
+      const response = await fetch("/api/export", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Lỗi Server (${response.status}): ${errorText}`);
+      }
+
+      // Tải file về
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let fileName = 'Ket_Qua_Trac_Nghiem.xlsx';
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (match && match[1]) fileName = match[1];
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast({
+        title: "✅ Thành công!",
+        description: "File kết quả đang được tải xuống.",
+      });
+
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      toast({
+        title: "❌ Thất bại",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+  // ------------------------------------
+
   const handleSend = async () => {
     if (!input.trim()) return;
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: input, timestamp: new Date() };
@@ -530,7 +592,7 @@ export default function Chatbot() {
                     )}
 
                     {editorTab === 'flashcard' && (
-                       <div className="grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-right-4">
+                        <div className="grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-right-4">
                           {[1,2,3].map(i => (
                             <div key={i} className="group h-48 [perspective:1000px] cursor-pointer">
                               <div className="relative h-full w-full rounded-3xl shadow-lg transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
@@ -547,7 +609,7 @@ export default function Chatbot() {
                               </div>
                             </div>
                           ))}
-                       </div>
+                        </div>
                     )}
                   </div>
                 </ScrollArea>
@@ -673,7 +735,15 @@ export default function Chatbot() {
                       </div>
                     </div>
                   </div>
-                  <input type="file" ref={fileInputRef} className="hidden" accept=".pdf" />
+                  {/* --- [SỬA LẠI ĐOẠN NÀY] --- */}
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    className="hidden" 
+                    accept=".pdf,.docx,.txt" // Thêm các đuôi file khác
+                    onChange={handleFileUpload} // Gắn hàm xử lý vào đây
+                  />
+                  {/* --------------------------- */}
                 </div>
 
                 {/* 3. HIỂN THỊ FILE ĐÃ TẢI LÊN */}

@@ -1,8 +1,8 @@
-fastapi
-uvicorn
-pandas
-fpdf
-openpyxl
+fastapi==0.109.0
+uvicorn==0.27.0
 python-multipart
 requests
-
+pandas
+openpyxl
+fpdf
+pydantic>=2.0.0

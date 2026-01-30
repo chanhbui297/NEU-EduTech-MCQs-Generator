@@ -1,20 +1,20 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel
+from typing import List
 import pandas as pd
-import html
 import os
 import uuid
+import shutil
 from fpdf import FPDF
 
 # ======================================================
-# CẤU HÌNH SERVER
+# 1. CẤU HÌNH SERVER
 # ======================================================
 app = FastAPI()
 
-# Cấu hình CORS (Cho phép Frontend gọi)
+# Cấu hình CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,41 +23,38 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Tạo thư mục tạm
 TEMP_DIR = "temp_exports"
-if not os.path.exists(TEMP_DIR):
-    os.makedirs(TEMP_DIR)
-    
-# Font chữ tiếng Việt (Bắt buộc phải có file Arial.ttf cùng thư mục)
-FONT_PATH = "Arial.ttf" 
+UPLOAD_DIR = "uploaded_files"
+os.makedirs(TEMP_DIR, exist_ok=True)
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# Font chữ (Fallback nếu không có)
+FONT_PATH = "Arial.ttf"
 
 # ======================================================
-# DATA MODELS
+# 2. DATA MODELS & AUTH
 # ======================================================
 class QuestionItem(BaseModel):
     question: str
-    options: List[str] = Field(..., min_items=2, description="Danh sách các đáp án")
-    correct_index: int = Field(..., description="Vị trí đáp án đúng (bắt đầu từ 0)")
+    options: List[str]
+    correct_index: int
     time_limit: int = 30
 
-class ExportRequest(BaseModel):
-    platform: str  # Kahoot, Quizlet, Wayground, NEU LMS
-    questions: List[QuestionItem]
+@app.get("/v1/auth/me")
+async def fake_auth_me():
+    return {
+        "id": "user_123",
+        "email": "demo@neu.edu.vn",
+        "name": "Cường Admin",
+        "role": "admin"
+    }
 
 # ======================================================
-# HÀM DỌN DẸP FILE RÁC
-# ======================================================
-def remove_file(path: str):
-    try:
-        os.remove(path)
-        print(f"🗑️ Đã xóa file tạm: {path}")
-    except Exception as e:
-        print(f"⚠️ Lỗi xóa file tạm: {e}")
-
-# ======================================================
-# CLASS XỬ LÝ LOGIC XUẤT FILE
+# 3. CLASS XỬ LÝ LOGIC XUẤT FILE
 # ======================================================
 class QuizExporter:
-    def __init__(self, data_list, request_id):
+    def __init__(self, data_list: List[QuestionItem], request_id):
         self.data = data_list
         self.request_id = request_id
 
@@ -67,30 +64,28 @@ class QuizExporter:
         
         rows = []
         for q in self.data:
-            # Quizizz cần 5 options, điền trống nếu thiếu
+            # Quizizz cần 5 options
             opts = q.options + [""] * (5 - len(q.options))
-            
             row = {
                 "Question Text": q.question,
                 "Question Type": "Multiple Choice",
-                "Option 1": opts[0],
-                "Option 2": opts[1],
-                "Option 3": opts[2],
-                "Option 4": opts[3],
-                "Option 5": opts[4], # Cột bắt buộc
-                "Correct Answer": q.correct_index + 1, # Quizizz đếm từ 1
+                "Option 1": opts[0], "Option 2": opts[1], "Option 3": opts[2], 
+                "Option 4": opts[3], "Option 5": opts[4],
+                "Correct Answer": q.correct_index + 1,
                 "Time in seconds": q.time_limit,
-                "Image Link": "",
-                "Answer explanation": ""
             }
             rows.append(row)
 
         df = pd.DataFrame(rows)
-        cols = ["Question Text", "Question Type", "Option 1", "Option 2", 
-                "Option 3", "Option 4", "Option 5", "Correct Answer", 
-                "Time in seconds", "Image Link", "Answer explanation"]
-        # Chỉ lấy cột tồn tại để tránh lỗi
-        df = df.reindex(columns=cols)
+        cols = ["Question Text", "Question Type", "Option 1", "Option 2", "Option 3", 
+                "Option 4", "Option 5", "Correct Answer", "Time in seconds", 
+                "Image Link", "Answer explanation"]
+        
+        # Tạo cột thiếu để tránh lỗi
+        for c in cols:
+            if c not in df.columns: df[c] = ""
+            
+        df = df[cols]
         df.to_excel(filepath, index=False)
         return filepath, filename
 
@@ -101,7 +96,7 @@ class QuizExporter:
         pdf = FPDF()
         pdf.add_page()
         
-        # Xử lý Font Tiếng Việt
+        # Xử lý Font
         has_font = False
         if os.path.exists(FONT_PATH):
             try:
@@ -109,7 +104,6 @@ class QuizExporter:
                 pdf.set_font('Arial', '', 12)
                 has_font = True
             except:
-                print("⚠️ Lỗi load font Arial, dùng font mặc định.")
                 pdf.set_font('Arial', '', 12)
         else:
             pdf.set_font('Arial', '', 12)
@@ -118,124 +112,88 @@ class QuizExporter:
         pdf.ln(5)
 
         for idx, q in enumerate(self.data):
-            # Nếu không có font tiếng Việt, phải encode lại để không crash
             q_text = q.question if has_font else q.question.encode('latin-1', 'replace').decode('latin-1')
-            
-            pdf.set_text_color(0, 0, 128) # Màu xanh
+            pdf.set_text_color(0, 0, 128)
             pdf.multi_cell(0, 8, f"Câu {idx+1}: {q_text}")
             pdf.set_text_color(0, 0, 0)
             
             for i, opt in enumerate(q.options):
                 opt_text = opt if has_font else opt.encode('latin-1', 'replace').decode('latin-1')
-                prefix = chr(65+i) # A, B, C...
+                prefix = chr(65+i)
                 check = " (ĐÚNG)" if i == q.correct_index else ""
-                
-                # Highlight đáp án đúng
-                if i == q.correct_index:
-                    pdf.set_font('Arial', 'B', 12) if not has_font else pdf.set_font('Arial', '', 12) # Đậm nếu được
-                
                 pdf.multi_cell(0, 6, f"   {prefix}. {opt_text}{check}")
-                
-                # Reset font
-                if i == q.correct_index:
-                     pdf.set_font('Arial', '', 12)
             pdf.ln(5)
 
         pdf.output(filepath)
         return filepath, filename
 
-    def export_lms_xml(self):
-        filename = f"NEU_LMS_{self.request_id}.xml"
-        filepath = os.path.join(TEMP_DIR, filename)
-        
-        xml = ['<?xml version="1.0" encoding="UTF-8"?>\n<quiz>']
-        for idx, q in enumerate(self.data):
-            q_text = html.escape(q.question)
-            xml.append(f'<question type="multichoice"><name><text>Câu {idx+1}</text></name>')
-            xml.append(f'<questiontext format="html"><text><![CDATA[{q_text}]]></text></questiontext>')
-            xml.append('<single>true</single><shuffleanswers>true</shuffleanswers>')
-            
-            for i, opt in enumerate(q.options):
-                # LMS NEU: Đúng = 100%, Sai = 0%
-                grade = "100" if i == q.correct_index else "0"
-                opt_text = html.escape(opt)
-                xml.append(f'<answer fraction="{grade}" format="html"><text><![CDATA[{opt_text}]]></text></answer>')
-            
-            xml.append("</question>")
-        xml.append("</quiz>")
-        
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write("\n".join(xml))
-        return filepath, filename
-    
-    def export_quizlet_txt(self):
-        filename = f"Quizlet_{self.request_id}.txt"
-        filepath = os.path.join(TEMP_DIR, filename)
-        
-        lines = []
-        for q in self.data:
-            # Quizlet format: Term <TAB> Definition
-            term = q.question.replace("\n", " ").replace("\t", " ")
-            # Giả định đáp án đúng là Definition
-            definition = q.options[q.correct_index].replace("\n", " ").replace("\t", " ")
-            lines.append(f"{term}\t{definition}")
-            
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write("\n".join(lines))
-        return filepath, filename
-
 # ======================================================
-# API ENDPOINT
+# 4. HÀM HỖ TRỢ & API CHÍNH
 # ======================================================
-@app.post("/export")
-async def export_data(request: ExportRequest, background_tasks: BackgroundTasks):
-    # Tạo ID duy nhất
-    req_id = str(uuid.uuid4())[:8]
-    exporter = QuizExporter(request.questions, req_id)
-    
-    file_path = ""
-    file_name = ""
-    target_url = "" 
 
+def remove_file(path: str):
     try:
-        # 1. Map Platform sang Logic xuất file
-        # Lưu ý: Client gửi lên "NEU LMS" nhưng logic có thể map string
-        p = request.platform.lower()
-        
-        if "quizizz" in p or "wayground" in p:
-            file_path, file_name = exporter.export_quizizz()
-            target_url = "https://quizizz.com/admin/quiz/import"
-            
-        elif "kahoot" in p:
-            file_path, file_name = exporter.export_kahoot_pdf()
-            target_url = "https://create.kahoot.it/"
-            
-        elif "lms" in p:
-            file_path, file_name = exporter.export_lms_xml()
-            target_url = "https://lms.neu.edu.vn/"
-            
-        elif "quizlet" in p:
-            file_path, file_name = exporter.export_quizlet_txt()
-            target_url = "https://quizlet.com/create"
-            
-        else:
-            # Mặc định fallback về Quizizz nếu không khớp
-            file_path, file_name = exporter.export_quizizz()
-            target_url = "https://quizizz.com/"
+        os.remove(path)
+        print(f"🗑️ Đã xóa file: {path}")
+    except Exception:
+        pass
 
-        # 2. Đăng ký tác vụ xóa file sau khi gửi xong (Background Task)
+def mock_ai_parsing(filename: str) -> List[QuestionItem]:
+    # Giả lập AI đọc file
+    return [
+        QuestionItem(
+            question=f"Câu hỏi từ file {filename}: 1 + 1 = ?",
+            options=["1", "2", "3", "4"],
+            correct_index=1,
+            time_limit=20
+        ),
+        QuestionItem(
+            question="Thủ đô của Việt Nam là gì?",
+            options=["TP.HCM", "Hà Nội", "Đà Nẵng", "Huế"],
+            correct_index=1,
+            time_limit=30
+        )
+    ]
+
+@app.post("/export")
+async def export_data(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...), 
+    platform: str = Form("quizizz")
+):
+    try:
+        # 1. Lưu file
+        req_id = str(uuid.uuid4())[:8]
+        file_location = os.path.join(UPLOAD_DIR, file.filename)
+        with open(file_location, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        print(f"📥 Đã nhận: {file.filename} | Platform: {platform}")
+
+        # 2. AI xử lý
+        questions = mock_ai_parsing(file.filename)
+        
+        # 3. Xuất file
+        exporter = QuizExporter(questions, req_id)
+        
+        p = platform.lower()
+        if "kahoot" in p:
+            file_path, file_name = exporter.export_kahoot_pdf()
+        else:
+            file_path, file_name = exporter.export_quizizz()
+
+        # 4. Dọn dẹp
         background_tasks.add_task(remove_file, file_path)
 
-        # 3. Trả về file kèm Header điều hướng
+        # 5. Trả về
         return FileResponse(
             path=file_path, 
             filename=file_name,
-            headers={
-                "X-Target-Url": target_url,
-                "Access-Control-Expose-Headers": "X-Target-Url" # Bắt buộc để Frontend đọc được
-            } 
+            media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            headers={"Content-Disposition": f"attachment; filename={file_name}"}
         )
 
     except Exception as e:
-        print(f"Error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Lỗi xuất file: {str(e)}")
+        print(f"❌ Error: {str(e)}")
+        # --- ĐÂY LÀ CHỖ ĐÃ SỬA ---
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý: {str(e)}")
