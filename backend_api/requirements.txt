@@ -6,3 +6,4 @@ pandas
 openpyxl
 fpdf
 pydantic>=2.0.0
+pypdf

@@ -14,11 +14,12 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // Để Docker hiểu
     port: 3000,
+    allowedHosts: true, // Cho phép Nginx connect vào mà không bị lỗi 403
     watch: {
       usePolling: true, // Quan trọng cho Windows Docker để hot-reload
     },
     hmr: {
-        overlay: false // Tắt cái màn hình báo lỗi đỏ lòm đi nếu không cần
+      overlay: false // Tắt cái màn hình báo lỗi đỏ lòm đi nếu không cần
     }
   }
 })
